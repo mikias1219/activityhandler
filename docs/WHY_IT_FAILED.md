@@ -43,6 +43,14 @@ That means the container **exited or never started correctly**, so Azure has not
 
 **Fix:** The Dockerfile now sets **`LIFEOS_ENV=docker`** (and `DJANGO_SETTINGS_MODULE=lifeos.settings`) so the container always uses the Docker settings even if Azure doesn’t pass the variable.
 
+### 5. **Buttons and CRUD not working in deployed version**
+
+- On the live site, pages loaded but **buttons did nothing** and **CRUD (create, edit, delete) failed**.
+- Cause: **Static files (JS) were not loaded**. The app’s behaviour (tasks, habits, finance, automation) is driven by `app.js`, `tasks.js`, `habits.js`, `finance.js`. If the browser can’t load these (404 or wrong path), `lifeos` is undefined and every action breaks.
+- Why static failed:
+  - **`STATIC_URL = "static/"`** (no leading slash) can make the browser resolve `static/...` **relative to the current path**. From `/app/tasks/`, that becomes `/app/tasks/static/js/app.js` → **404**. So the JS never loaded.
+- **Fix:** Set **`STATIC_URL = "/static/"`** so static URLs are always from the site root. Use **`{% load static %}`** and **`{% static 'js/app.js' %}`** in templates so Django generates correct URLs. Redeploy so `collectstatic` runs and WhiteNoise serves `/static/...` correctly; then buttons and CRUD work.
+
 ---
 
 ## Domain / app name (rename)

@@ -24,4 +24,4 @@ EXPOSE 8000
 RUN pip install --no-cache-dir gunicorn
 RUN chmod +x scripts/start.sh 2>/dev/null || true
 # Use ; so gunicorn starts even if migrate fails (you'll see errors in logs). /app is writable for SQLite.
-CMD ["/bin/bash", "-c", "python manage.py migrate --noinput; python manage.py collectstatic --noinput 2>/dev/null || true; exec gunicorn --bind 0.0.0.0:8000 --workers 2 --timeout 120 lifeos.wsgi:application"]
+CMD ["/bin/bash", "-c", "python manage.py migrate --noinput; python manage.py collectstatic --noinput --clear || true; exec gunicorn --bind 0.0.0.0:8000 --workers 2 --timeout 120 lifeos.wsgi:application"]
