@@ -1,0 +1,11 @@
+# LifeOS - Development & testing
+-r base.txt
+pytest>=8.0,<9
+pytest-django>=4.7,<5
+pytest-cov>=4.1,<5
+factory-boy>=3.3,<4
+ruff>=0.4,<1
+black>=24.2,<25
+mypy>=1.8,<2
+django-stubs>=5.0,<6
+djangorestframework-stubs>=3.14,<4

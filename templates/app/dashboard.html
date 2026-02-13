@@ -1,0 +1,49 @@
+{% extends "app/base_app.html" %}
+{% block app_title %}Dashboard{% endblock %}
+{% block content %}
+<div class="space-y-8">
+  <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Dashboard</h1>
+
+  <section class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+    <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">What should I do now?</h2>
+    <div id="what-to-do" class="text-slate-600 dark:text-slate-400">Loading…</div>
+    <ul id="suggestions-list" class="mt-4 space-y-2"></ul>
+  </section>
+
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <a href="/app/tasks/" class="block bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 hover:border-emerald-500 dark:hover:border-emerald-500 transition">
+      <span class="text-3xl">📋</span>
+      <h3 class="text-lg font-semibold mt-2 text-slate-800 dark:text-slate-100">Tasks</h3>
+      <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Manage tasks and today's planner</p>
+    </a>
+    <a href="/app/habits/" class="block bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 hover:border-emerald-500 dark:hover:border-emerald-500 transition">
+      <span class="text-3xl">✅</span>
+      <h3 class="text-lg font-semibold mt-2 text-slate-800 dark:text-slate-100">Habits</h3>
+      <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Track habits and streaks</p>
+    </a>
+    <a href="/app/finance/" class="block bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 hover:border-emerald-500 dark:hover:border-emerald-500 transition">
+      <span class="text-3xl">💰</span>
+      <h3 class="text-lg font-semibold mt-2 text-slate-800 dark:text-slate-100">Finance</h3>
+      <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Expenses, budgets, reports</p>
+    </a>
+  </section>
+</div>
+<script>
+(function() {
+  if (lifeosRedirectLogin && lifeosRedirectLogin()) return;
+  lifeos.get('/ai/what-to-do-now/').then(function(r) { return r.json(); }).then(function(data) {
+    document.getElementById('what-to-do').textContent = data.message || 'You are all set.';
+    var list = document.getElementById('suggestions-list');
+    list.innerHTML = '';
+    (data.suggestions || []).forEach(function(s) {
+      var li = document.createElement('li');
+      li.className = 'flex items-center gap-2 text-sm';
+      li.innerHTML = '<span class="text-emerald-500">' + (s.priority === 'high' ? '!' : '•') + '</span> ' + (s.title || '');
+      list.appendChild(li);
+    });
+  }).catch(function() {
+    document.getElementById('what-to-do').textContent = 'Could not load suggestions.';
+  });
+})();
+</script>
+{% endblock %}

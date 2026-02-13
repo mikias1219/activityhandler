@@ -1,0 +1,71 @@
+# LifeOS — Deploy to Azure (ACR + App Service)
+# Push to main runs CI; on success this workflow builds, pushes image, deploys, and sets app settings.
+name: Deploy to Azure
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: ${{ vars.AZURE_WEBAPP_NAME || 'lifeos-app' }}
+  AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP || 'lifeos-rg' }}
+  REGISTRY: lifeosacr.azurecr.io
+  IMAGE_NAME: lifeos
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set default resource group
+        run: az configure --defaults group=${{ env.AZURE_RESOURCE_GROUP }}
+
+      - name: Login to ACR
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ env.REGISTRY }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build image
+        run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest .
+
+      - name: Push image
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Set app settings
+        run: |
+          az webapp config appsettings set --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --name ${{ env.AZURE_WEBAPP_NAME }} \
+            --settings WEBSITES_PORT=8000 LIFEOS_ENV=docker DEBUG=false ALLOWED_HOSTS=".azurewebsites.net" \
+            --output none
+          # SECRET_KEY: set in GitHub Secrets as APP_SECRET_KEY and add here, or leave Azure default
+          if [ -n "${{ secrets.APP_SECRET_KEY }}" ]; then
+            az webapp config appsettings set --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --name ${{ env.AZURE_WEBAPP_NAME }} \
+              --settings SECRET_KEY="${{ secrets.APP_SECRET_KEY }}" --output none
+          fi
+
+      - name: Restart Web App
+        run: az webapp restart --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --name ${{ env.AZURE_WEBAPP_NAME }} --output none
+
+      - name: Azure logout
+        run: az logout

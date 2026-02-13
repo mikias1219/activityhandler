@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "baseName": { "value": "lifeos" },
+    "location": { "value": "eastus" },
+    "dockerImage": { "value": "YOUR_ACR.azurecr.io/lifeos:latest" },
+    "acrLoginServer": { "value": "YOUR_ACR.azurecr.io" },
+    "postgresAdminLogin": { "value": "lifeosadmin" },
+    "postgresAdminPassword": { "value": "REPLACE_WITH_SECURE_PASSWORD" }
+  }
+}

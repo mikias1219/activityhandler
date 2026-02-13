@@ -1,0 +1,23 @@
+{% extends "app/base_app.html" %}
+{% block app_title %}Habits{% endblock %}
+{% block content %}
+<div class="space-y-6">
+  <h1 class="text-2xl font-bold">Habits</h1>
+  <button type="button" id="btn-new-habit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg">+ New habit</button>
+  <div id="habit-form" class="hidden bg-white dark:bg-slate-800 rounded-2xl border p-6 mb-6">
+    <form id="habit-form-el">
+      <input type="hidden" id="habit-id">
+      <label>Name</label>
+      <input type="text" id="habit-name" required class="w-full px-4 py-2 rounded-lg border">
+      <label>Frequency</label>
+      <select id="habit-freq"><option value="daily">Daily</option><option value="weekly">Weekly</option></select>
+      <label>Target count</label>
+      <input type="number" id="habit-count" value="1" min="1" class="w-full px-4 py-2 rounded-lg border">
+      <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg">Save</button>
+      <button type="button" id="btn-cancel-habit" class="px-4 py-2 bg-slate-200 rounded-lg">Cancel</button>
+    </form>
+  </div>
+  <div id="habits-list"></div>
+</div>
+<script src="/static/js/habits.js"></script>
+{% endblock %}

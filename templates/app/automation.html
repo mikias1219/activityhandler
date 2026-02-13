@@ -1,0 +1,128 @@
+{% extends "app/base_app.html" %}
+{% block app_title %}Automation{% endblock %}
+{% block content %}
+<div class="space-y-8">
+  <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Automation</h1>
+
+  <section>
+    <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">Reminders</h2>
+    <form id="reminder-form" class="flex flex-wrap gap-4 items-end mb-6">
+      <div>
+        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Title</label>
+        <input type="text" id="rem-title" required placeholder="e.g. Call mom" class="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 w-48">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Remind at (date & time)</label>
+        <input type="datetime-local" id="rem-at" required class="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700">
+      </div>
+      <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm">Add reminder</button>
+    </form>
+    <div id="reminders-list" class="space-y-2"></div>
+  </section>
+
+  <section>
+    <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">Rules (IFTTT-style)</h2>
+    <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Create rules that trigger actions. More triggers and actions coming soon.</p>
+    <form id="rule-form" class="flex flex-wrap gap-4 items-end mb-6">
+      <div>
+        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Rule name</label>
+        <input type="text" id="rule-name" required placeholder="e.g. Morning reminder" class="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 w-48">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">When (trigger)</label>
+        <select id="rule-trigger" class="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700">
+          <option value="task_completed">Task completed</option>
+          <option value="habit_check_in">Habit checked in</option>
+          <option value="time_of_day">Time of day</option>
+          <option value="daily">Daily at time</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Then (action)</label>
+        <select id="rule-action" class="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700">
+          <option value="create_task">Create task</option>
+          <option value="send_reminder">Send reminder</option>
+          <option value="log_note">Log note</option>
+        </select>
+      </div>
+      <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm">Add rule</button>
+    </form>
+    <div id="rules-list" class="space-y-4"></div>
+  </section>
+</div>
+<script>
+(function() {
+  if (lifeosRedirectLogin && lifeosRedirectLogin()) return;
+  var remindersList = document.getElementById('reminders-list');
+  var rulesList = document.getElementById('rules-list');
+
+  document.getElementById('reminder-form').onsubmit = function(e) {
+    e.preventDefault();
+    var title = document.getElementById('rem-title').value.trim();
+    var remindAt = document.getElementById('rem-at').value;
+    if (!title || !remindAt) return;
+    var dt = new Date(remindAt);
+    lifeos.post('/automation/reminders/', { title: title, remind_at: dt.toISOString() }).then(function() {
+      document.getElementById('rem-title').value = '';
+      loadReminders();
+    });
+  };
+
+  function loadReminders() {
+    lifeos.get('/automation/reminders/').then(function(r) { return r.json(); }).then(function(data) {
+      var items = (data.results || []).filter(function(r) { return !r.is_sent; });
+      if (items.length === 0) { remindersList.innerHTML = '<p class="text-slate-500 text-sm">No upcoming reminders.</p>'; return; }
+      remindersList.innerHTML = items.map(function(r) {
+        return '<div class="flex items-center justify-between p-3 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700" data-id="' + r.id + '">' +
+          '<span>' + (r.title || '') + ' — ' + (r.remind_at ? r.remind_at.slice(0, 16).replace('T', ' ') : '') + '</span>' +
+          '<button type="button" class="rem-delete px-2 py-1 rounded bg-red-100 dark:bg-red-900/40 text-red-700 text-sm">Delete</button></div>';
+      }).join('');
+      remindersList.querySelectorAll('.rem-delete').forEach(function(btn) {
+        btn.onclick = function() {
+          var id = btn.closest('[data-id]').getAttribute('data-id');
+          lifeos.delete('/automation/reminders/' + id + '/').then(function() { loadReminders(); });
+        };
+      });
+    });
+  }
+
+  document.getElementById('rule-form').onsubmit = function(e) {
+    e.preventDefault();
+    var name = document.getElementById('rule-name').value.trim();
+    var trigger = document.getElementById('rule-trigger').value;
+    var action = document.getElementById('rule-action').value;
+    if (!name) return;
+    lifeos.post('/automation/rules/', { name: name, trigger_type: trigger, action_type: action }).then(function() {
+      document.getElementById('rule-name').value = '';
+      loadRules();
+    }).catch(function() { alert('Failed to add rule.'); });
+  };
+
+  function loadRules() {
+    lifeos.get('/automation/rules/').then(function(r) { return r.json(); }).then(function(data) {
+      var items = data.results || [];
+      if (items.length === 0) { rulesList.innerHTML = '<p class="text-slate-500 text-sm">No rules yet. Add one above.</p>'; return; }
+      rulesList.innerHTML = items.map(function(rule) {
+        var triggerLabel = (rule.trigger_type || '').replace(/_/g, ' ');
+        var actionLabel = (rule.action_type || '').replace(/_/g, ' ');
+        return '<div class="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700" data-id="' + rule.id + '">' +
+          '<p class="font-medium text-slate-800 dark:text-slate-100">' + (rule.name || '') + '</p>' +
+          '<p class="text-sm text-slate-500 dark:text-slate-400">When: ' + triggerLabel + ' → Then: ' + actionLabel + '</p>' +
+          '<div class="mt-2 flex gap-2"><button type="button" class="rule-delete px-2 py-1 rounded bg-red-100 dark:bg-red-900/40 text-red-700 text-sm">Delete</button></div></div>';
+      }).join('');
+      rulesList.querySelectorAll('.rule-delete').forEach(function(btn) {
+        btn.onclick = function() {
+          var id = btn.closest('[data-id]').getAttribute('data-id');
+          if (confirm('Delete this rule?')) {
+            lifeos.delete('/automation/rules/' + id + '/').then(function() { loadRules(); });
+          }
+        };
+      });
+    });
+  }
+
+  loadReminders();
+  loadRules();
+})();
+</script>
+{% endblock %}

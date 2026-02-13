@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}LifeOS{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    [x-cloak] { display: none !important; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-full bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+  {% block body %}{% endblock %}
+  <script>
+    window.LIFEOS_API = '/api/v1';
+    window.LIFEOS_TOKEN = localStorage.getItem('lifeos_token');
+    window.LIFEOS_REFRESH = localStorage.getItem('lifeos_refresh');
+    function lifeosRedirectLogin() {
+      if (!window.LIFEOS_TOKEN && !window.location.pathname.match(/^\/(login|register|password-reset)/)) {
+        window.location.href = '/login/';
+        return true;
+      }
+      return false;
+    }
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
