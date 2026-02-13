@@ -1,6 +1,7 @@
 """
 LifeOS production settings (Azure App Service).
 """
+
 from .base import *  # noqa: F401, F403
 
 DEBUG = False

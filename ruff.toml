@@ -5,6 +5,9 @@ exclude = [".venv", "venv", "__pycache__", ".git"]
 [lint]
 select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
 ignore = ["E501"]
+# env from "from .base import *" in Django settings
+[lint.per-file-ignores]
+"lifeos/settings/*.py" = ["F405"]
 
 [format]
 quote-style = "double"

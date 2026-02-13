@@ -6,36 +6,51 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('habits', '0001_initial'),
+        ("habits", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='habit',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='habits', to=settings.AUTH_USER_MODEL),
+            model_name="habit",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="habits",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='habitcheckin',
-            name='habit',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='check_ins', to='habits.habit'),
+            model_name="habitcheckin",
+            name="habit",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="check_ins",
+                to="habits.habit",
+            ),
         ),
         migrations.AddField(
-            model_name='habitcheckin',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='habit_check_ins', to=settings.AUTH_USER_MODEL),
+            model_name="habitcheckin",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="habit_check_ins",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddIndex(
-            model_name='habitcheckin',
-            index=models.Index(fields=['habit', 'check_date'], name='habits_habi_habit_i_7ca6e0_idx'),
+            model_name="habitcheckin",
+            index=models.Index(
+                fields=["habit", "check_date"], name="habits_habi_habit_i_7ca6e0_idx"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='habitcheckin',
-            constraint=models.UniqueConstraint(fields=('habit', 'check_date'), name='unique_habit_check_per_day'),
+            model_name="habitcheckin",
+            constraint=models.UniqueConstraint(
+                fields=("habit", "check_date"), name="unique_habit_check_per_day"
+            ),
         ),
     ]

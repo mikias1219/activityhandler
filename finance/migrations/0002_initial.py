@@ -6,50 +6,78 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('finance', '0001_initial'),
+        ("finance", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='budget',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='budgets', to=settings.AUTH_USER_MODEL),
+            model_name="budget",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="budgets",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='expense',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='expenses', to=settings.AUTH_USER_MODEL),
+            model_name="expense",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="expenses",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='expensecategory',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='expense_categories', to=settings.AUTH_USER_MODEL),
+            model_name="expensecategory",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="expense_categories",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='expense',
-            name='category',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='expenses', to='finance.expensecategory'),
+            model_name="expense",
+            name="category",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="expenses",
+                to="finance.expensecategory",
+            ),
         ),
         migrations.AddField(
-            model_name='budget',
-            name='category',
-            field=models.ForeignKey(blank=True, help_text='Null = total budget for the month', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='budgets', to='finance.expensecategory'),
+            model_name="budget",
+            name="category",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="Null = total budget for the month",
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="budgets",
+                to="finance.expensecategory",
+            ),
         ),
         migrations.AddIndex(
-            model_name='expense',
-            index=models.Index(fields=['user', 'expense_date'], name='finance_exp_user_id_b6bcca_idx'),
+            model_name="expense",
+            index=models.Index(
+                fields=["user", "expense_date"], name="finance_exp_user_id_b6bcca_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='expense',
-            index=models.Index(fields=['category', 'expense_date'], name='finance_exp_categor_b624d6_idx'),
+            model_name="expense",
+            index=models.Index(
+                fields=["category", "expense_date"], name="finance_exp_categor_b624d6_idx"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='budget',
-            constraint=models.UniqueConstraint(fields=('user', 'month', 'category'), name='unique_budget_per_user_month_category'),
+            model_name="budget",
+            constraint=models.UniqueConstraint(
+                fields=("user", "month", "category"), name="unique_budget_per_user_month_category"
+            ),
         ),
     ]

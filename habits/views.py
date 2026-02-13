@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Habit, HabitCheckIn
-from .serializers import HabitCheckInSerializer, HabitSerializer, HabitWithStreakSerializer
+from .serializers import HabitCheckInSerializer, HabitSerializer
 from .services import get_streak
 
 

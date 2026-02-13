@@ -4,27 +4,55 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Task',
+            name="Task",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255)),
-                ('notes', models.TextField(blank=True)),
-                ('due_date', models.DateField(blank=True, db_index=True, null=True)),
-                ('priority', models.CharField(choices=[('urgent_important', 'Urgent & Important'), ('urgent_not_important', 'Urgent, Not Important'), ('not_urgent_important', 'Not Urgent, Important'), ('not_urgent_not_important', 'Not Urgent, Not Important')], default='not_urgent_important', max_length=32)),
-                ('status', models.CharField(choices=[('todo', 'To Do'), ('in_progress', 'In Progress'), ('done', 'Done'), ('cancelled', 'Cancelled')], db_index=True, default='todo', max_length=20)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("notes", models.TextField(blank=True)),
+                ("due_date", models.DateField(blank=True, db_index=True, null=True)),
+                (
+                    "priority",
+                    models.CharField(
+                        choices=[
+                            ("urgent_important", "Urgent & Important"),
+                            ("urgent_not_important", "Urgent, Not Important"),
+                            ("not_urgent_important", "Not Urgent, Important"),
+                            ("not_urgent_not_important", "Not Urgent, Not Important"),
+                        ],
+                        default="not_urgent_important",
+                        max_length=32,
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("todo", "To Do"),
+                            ("in_progress", "In Progress"),
+                            ("done", "Done"),
+                            ("cancelled", "Cancelled"),
+                        ],
+                        db_index=True,
+                        default="todo",
+                        max_length=20,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'ordering': ['due_date', 'created_at'],
+                "ordering": ["due_date", "created_at"],
             },
         ),
     ]

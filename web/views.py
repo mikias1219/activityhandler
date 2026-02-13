@@ -1,4 +1,5 @@
 """Serve the LifeOS web UI (templates). Auth is via JWT in localStorage (frontend)."""
+
 from django.shortcuts import redirect, render
 
 
@@ -15,10 +16,14 @@ def password_reset_view(request):
 
 
 def password_reset_confirm_view(request):
-    return render(request, "auth/password_reset_confirm.html", {
-        "uid": request.GET.get("uid", ""),
-        "token": request.GET.get("token", ""),
-    })
+    return render(
+        request,
+        "auth/password_reset_confirm.html",
+        {
+            "uid": request.GET.get("uid", ""),
+            "token": request.GET.get("token", ""),
+        },
+    )
 
 
 def dashboard_view(request):

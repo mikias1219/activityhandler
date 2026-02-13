@@ -11,8 +11,14 @@ from .views import (
 )
 
 urlpatterns = [
-    path("expense-categories/", ExpenseCategoryListCreateView.as_view(), name="expense-category-list"),
-    path("expense-categories/<int:pk>/", ExpenseCategoryDetailView.as_view(), name="expense-category-detail"),
+    path(
+        "expense-categories/", ExpenseCategoryListCreateView.as_view(), name="expense-category-list"
+    ),
+    path(
+        "expense-categories/<int:pk>/",
+        ExpenseCategoryDetailView.as_view(),
+        name="expense-category-detail",
+    ),
     path("expenses/", ExpenseListCreateView.as_view(), name="expense-list"),
     path("expenses/report/", ExpenseReportView.as_view(), name="expense-report"),
     path("expenses/<int:pk>/", ExpenseDetailView.as_view(), name="expense-detail"),

@@ -1,7 +1,7 @@
 """
 LifeOS base settings — environment-agnostic.
 """
-import os
+
 from pathlib import Path
 
 import environ
@@ -83,7 +83,9 @@ if _db_url.startswith("sqlite"):
         }
     }
 else:
-    DATABASES = {"default": env.db("DATABASE_URL", default="postgres://lifeos:lifeos@localhost:5432/lifeos")}
+    DATABASES = {
+        "default": env.db("DATABASE_URL", default="postgres://lifeos:lifeos@localhost:5432/lifeos")
+    }
 
 CACHES = {
     "default": env.cache(
@@ -152,9 +154,13 @@ CORS_ALLOW_ALL_ORIGINS = env.bool("CORS_ALLOW_ALL_ORIGINS", default=DEBUG)
 # Audit
 AUDIT_LOG_ENABLED = env.bool("AUDIT_LOG_ENABLED", default=True)
 AUDIT_LOG_SKIP_PATHS = [
-    "/api/health/", "/admin/jsi18n/", "/api/schema/",
-    "/api/v1/auth/login/", "/api/v1/auth/register/",
-    "/api/v1/auth/password-reset/", "/api/v1/auth/password-reset/confirm/",
+    "/api/health/",
+    "/admin/jsi18n/",
+    "/api/schema/",
+    "/api/v1/auth/login/",
+    "/api/v1/auth/register/",
+    "/api/v1/auth/password-reset/",
+    "/api/v1/auth/password-reset/confirm/",
 ]
 
 # Email (password reset, notifications)

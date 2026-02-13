@@ -1,4 +1,5 @@
 """AI Coach tests."""
+
 import pytest
 from rest_framework.test import APIClient
 
@@ -7,7 +8,9 @@ from users.models import User
 
 @pytest.fixture
 def user(db):
-    return User.objects.create_user(email="u@example.com", password="pass123", first_name="U", last_name="U")
+    return User.objects.create_user(
+        email="u@example.com", password="pass123", first_name="U", last_name="U"
+    )
 
 
 @pytest.fixture

@@ -1,6 +1,7 @@
 """
 AI Coach API: what should I do now, weekly summary (stub).
 """
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView

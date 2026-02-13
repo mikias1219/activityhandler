@@ -7,9 +7,15 @@ class AutomationRuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = AutomationRule
         fields = [
-            "id", "name", "trigger_type", "trigger_config",
-            "action_type", "action_config", "is_active",
-            "created_at", "updated_at",
+            "id",
+            "name",
+            "trigger_type",
+            "trigger_config",
+            "action_type",
+            "action_config",
+            "is_active",
+            "created_at",
+            "updated_at",
         ]
         read_only_fields = ["created_at", "updated_at"]
 

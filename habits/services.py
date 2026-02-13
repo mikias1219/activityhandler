@@ -1,6 +1,7 @@
 """
 Habit streak calculation: consecutive days with at least one check-in.
 """
+
 from datetime import timedelta
 
 from django.utils import timezone

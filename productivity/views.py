@@ -37,6 +37,7 @@ class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class TaskTodayView(generics.ListAPIView):
     """Today's tasks (daily planner)."""
+
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
 

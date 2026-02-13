@@ -1,6 +1,7 @@
 """
 Custom user model — email as identifier.
 """
+
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 

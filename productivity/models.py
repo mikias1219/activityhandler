@@ -1,6 +1,7 @@
 """
 Productivity: tasks (GTD-style) with Eisenhower priority.
 """
+
 from django.conf import settings
 from django.db import models
 

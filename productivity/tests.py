@@ -1,4 +1,5 @@
 """Productivity app tests."""
+
 from datetime import date, timedelta
 
 import pytest
@@ -6,12 +7,15 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from users.models import User
+
 from .models import Task
 
 
 @pytest.fixture
 def user(db):
-    return User.objects.create_user(email="u@example.com", password="pass123", first_name="U", last_name="U")
+    return User.objects.create_user(
+        email="u@example.com", password="pass123", first_name="U", last_name="U"
+    )
 
 
 @pytest.fixture
@@ -35,7 +39,13 @@ class TestTaskCRUD:
     def test_create_task(self, auth_client, user):
         resp = auth_client.post(
             "/api/v1/tasks/",
-            {"title": "My task", "notes": "Note", "due_date": "2025-03-01", "priority": "urgent_important", "status": "todo"},
+            {
+                "title": "My task",
+                "notes": "Note",
+                "due_date": "2025-03-01",
+                "priority": "urgent_important",
+                "status": "todo",
+            },
             format="json",
         )
         assert resp.status_code == status.HTTP_201_CREATED
@@ -43,8 +53,15 @@ class TestTaskCRUD:
         assert Task.objects.filter(user=user).count() == 1
 
     def test_today_view(self, auth_client, user):
-        Task.objects.create(user=user, title="Today task", due_date=date.today(), status=Task.Status.TODO)
-        Task.objects.create(user=user, title="Later", due_date=date.today() + timedelta(days=7), status=Task.Status.TODO)
+        Task.objects.create(
+            user=user, title="Today task", due_date=date.today(), status=Task.Status.TODO
+        )
+        Task.objects.create(
+            user=user,
+            title="Later",
+            due_date=date.today() + timedelta(days=7),
+            status=Task.Status.TODO,
+        )
         resp = auth_client.get("/api/v1/tasks/today/")
         assert resp.status_code == status.HTTP_200_OK
         results = resp.data if isinstance(resp.data, list) else resp.data.get("results", resp.data)

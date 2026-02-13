@@ -1,6 +1,7 @@
 """
 Audit logging middleware — logs authenticated API requests.
 """
+
 from django.conf import settings
 from django.utils.deprecation import MiddlewareMixin
 
@@ -20,7 +21,9 @@ class AuditLoggingMiddleware(MiddlewareMixin):
         # Defer log write to process_response so we have response status
         request._audit_path = path
         request._audit_method = request.method
-        request._audit_user = getattr(request, "user", None) if request.user.is_authenticated else None
+        request._audit_user = (
+            getattr(request, "user", None) if request.user.is_authenticated else None
+        )
 
     def process_response(self, request, response) -> None:
         if not getattr(request, "_audit_path", None):

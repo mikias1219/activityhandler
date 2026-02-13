@@ -1,10 +1,10 @@
 """
 Auth and user profile views.
 """
+
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from .models import User
 from .serializers import RegisterSerializer, UserSerializer
@@ -12,6 +12,7 @@ from .serializers import RegisterSerializer, UserSerializer
 
 class RegisterView(generics.CreateAPIView):
     """POST /api/v1/auth/register/ — create account."""
+
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
@@ -28,6 +29,7 @@ class RegisterView(generics.CreateAPIView):
 
 class MeView(generics.RetrieveUpdateAPIView):
     """GET/PATCH /api/v1/me/ — current user profile."""
+
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
 

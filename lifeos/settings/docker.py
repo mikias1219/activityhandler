@@ -1,6 +1,7 @@
 """
 LifeOS settings when running in Docker (Azure App Service or compose).
 """
+
 from .base import *  # noqa: F401, F403
 
 DEBUG = env.bool("DEBUG", default=False)

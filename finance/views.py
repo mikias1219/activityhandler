@@ -92,11 +92,13 @@ class ExpenseReportView(generics.GenericAPIView):
             .annotate(total=Sum("amount"))
         )
         total = sum(r["total"] for r in qs)
-        return Response({
-            "month": month,
-            "by_category": list(qs),
-            "total": total,
-        })
+        return Response(
+            {
+                "month": month,
+                "by_category": list(qs),
+                "total": total,
+            }
+        )
 
 
 class BudgetListCreateView(generics.ListCreateAPIView):

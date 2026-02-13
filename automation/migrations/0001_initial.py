@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,36 +14,81 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='AutomationRule',
+            name="AutomationRule",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('trigger_type', models.CharField(choices=[('task_completed', 'Task completed'), ('habit_check_in', 'Habit checked in'), ('time_of_day', 'Time of day'), ('daily', 'Daily at time')], max_length=32)),
-                ('trigger_config', models.JSONField(blank=True, default=dict)),
-                ('action_type', models.CharField(choices=[('create_task', 'Create task'), ('send_reminder', 'Send reminder'), ('log_note', 'Log note')], max_length=32)),
-                ('action_config', models.JSONField(blank=True, default=dict)),
-                ('is_active', models.BooleanField(default=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='automation_rules', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                (
+                    "trigger_type",
+                    models.CharField(
+                        choices=[
+                            ("task_completed", "Task completed"),
+                            ("habit_check_in", "Habit checked in"),
+                            ("time_of_day", "Time of day"),
+                            ("daily", "Daily at time"),
+                        ],
+                        max_length=32,
+                    ),
+                ),
+                ("trigger_config", models.JSONField(blank=True, default=dict)),
+                (
+                    "action_type",
+                    models.CharField(
+                        choices=[
+                            ("create_task", "Create task"),
+                            ("send_reminder", "Send reminder"),
+                            ("log_note", "Log note"),
+                        ],
+                        max_length=32,
+                    ),
+                ),
+                ("action_config", models.JSONField(blank=True, default=dict)),
+                ("is_active", models.BooleanField(default=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="automation_rules",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-created_at'],
+                "ordering": ["-created_at"],
             },
         ),
         migrations.CreateModel(
-            name='Reminder',
+            name="Reminder",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255)),
-                ('remind_at', models.DateTimeField(db_index=True)),
-                ('recurring_rule', models.CharField(blank=True, max_length=128)),
-                ('is_sent', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reminders', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("remind_at", models.DateTimeField(db_index=True)),
+                ("recurring_rule", models.CharField(blank=True, max_length=128)),
+                ("is_sent", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="reminders",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ['remind_at'],
+                "ordering": ["remind_at"],
             },
         ),
     ]

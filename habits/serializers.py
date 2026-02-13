@@ -14,8 +14,12 @@ class HabitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Habit
         fields = [
-            "id", "name", "target_frequency", "target_count",
-            "created_at", "updated_at",
+            "id",
+            "name",
+            "target_frequency",
+            "target_count",
+            "created_at",
+            "updated_at",
         ]
         read_only_fields = ["created_at", "updated_at"]
 

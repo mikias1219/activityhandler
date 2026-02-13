@@ -1,4 +1,5 @@
 """Habits app tests."""
+
 from datetime import date, timedelta
 
 import pytest
@@ -6,13 +7,16 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from users.models import User
+
 from .models import Habit, HabitCheckIn
 from .services import get_streak
 
 
 @pytest.fixture
 def user(db):
-    return User.objects.create_user(email="u@example.com", password="pass123", first_name="U", last_name="U")
+    return User.objects.create_user(
+        email="u@example.com", password="pass123", first_name="U", last_name="U"
+    )
 
 
 @pytest.fixture
@@ -54,5 +58,7 @@ def test_get_streak_consecutive_days(user):
     habit = Habit.objects.create(user=user, name="Run", target_frequency="daily")
     today = date.today()
     for i in range(3):
-        HabitCheckIn.objects.create(habit=habit, user=user, check_date=today - timedelta(days=i), completed=True)
+        HabitCheckIn.objects.create(
+            habit=habit, user=user, check_date=today - timedelta(days=i), completed=True
+        )
     assert get_streak(habit) == 3

@@ -1,6 +1,7 @@
 """
 Finance: categories, expenses, budgets.
 """
+
 from django.conf import settings
 from django.db import models
 
@@ -48,7 +49,7 @@ class Expense(models.Model):
         ]
 
     def __str__(self):
-        return "%s %s — %s" % (self.amount, self.currency, self.expense_date)
+        return f"{self.amount} {self.currency} — {self.expense_date}"
 
 
 class Budget(models.Model):
@@ -82,4 +83,4 @@ class Budget(models.Model):
         ]
 
     def __str__(self):
-        return "Budget %s — %s" % (self.month, self.amount)
+        return f"Budget {self.month} — {self.amount}"

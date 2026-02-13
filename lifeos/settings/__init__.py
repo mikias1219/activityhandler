@@ -2,6 +2,7 @@
 LifeOS settings entry point.
 Set LIFEOS_ENV=development|docker|production (default: development).
 """
+
 import os
 
 _env = os.environ.get("LIFEOS_ENV", "development")

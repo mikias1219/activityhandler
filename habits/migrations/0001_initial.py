@@ -4,38 +4,58 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Habit',
+            name="Habit",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('target_frequency', models.CharField(choices=[('daily', 'Daily'), ('weekly', 'Weekly'), ('custom', 'Custom')], default='daily', max_length=20)),
-                ('target_count', models.PositiveSmallIntegerField(default=1, help_text='e.g. 1 per day, 3 per week')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                (
+                    "target_frequency",
+                    models.CharField(
+                        choices=[("daily", "Daily"), ("weekly", "Weekly"), ("custom", "Custom")],
+                        default="daily",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "target_count",
+                    models.PositiveSmallIntegerField(
+                        default=1, help_text="e.g. 1 per day, 3 per week"
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'ordering': ['name'],
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='HabitCheckIn',
+            name="HabitCheckIn",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('check_date', models.DateField(db_index=True)),
-                ('completed', models.BooleanField(default=True)),
-                ('notes', models.TextField(blank=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("check_date", models.DateField(db_index=True)),
+                ("completed", models.BooleanField(default=True)),
+                ("notes", models.TextField(blank=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
             options={
-                'ordering': ['-check_date'],
+                "ordering": ["-check_date"],
             },
         ),
     ]

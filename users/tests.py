@@ -1,6 +1,6 @@
 """Users app tests."""
+
 import pytest
-from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
@@ -27,7 +27,13 @@ class TestRegister:
     def test_register_success(self, api_client):
         resp = api_client.post(
             "/api/v1/auth/register/",
-            {"email": "new@example.com", "password": "securepass123", "password_confirm": "securepass123", "first_name": "New", "last_name": "User"},
+            {
+                "email": "new@example.com",
+                "password": "securepass123",
+                "password_confirm": "securepass123",
+                "first_name": "New",
+                "last_name": "User",
+            },
             format="json",
         )
         assert resp.status_code == status.HTTP_201_CREATED
@@ -38,7 +44,13 @@ class TestRegister:
     def test_register_password_mismatch(self, api_client):
         resp = api_client.post(
             "/api/v1/auth/register/",
-            {"email": "new@example.com", "password": "pass123", "password_confirm": "pass456", "first_name": "A", "last_name": "B"},
+            {
+                "email": "new@example.com",
+                "password": "pass123",
+                "password_confirm": "pass456",
+                "first_name": "A",
+                "last_name": "B",
+            },
             format="json",
         )
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
@@ -81,23 +93,32 @@ class TestMe:
 @pytest.mark.django_db
 class TestPasswordReset:
     def test_password_reset_request_returns_200_even_unknown_email(self, api_client):
-        resp = api_client.post("/api/v1/auth/password-reset/", {"email": "nonexistent@example.com"}, format="json")
+        resp = api_client.post(
+            "/api/v1/auth/password-reset/", {"email": "nonexistent@example.com"}, format="json"
+        )
         assert resp.status_code == status.HTTP_200_OK
 
     def test_password_reset_request_valid_email(self, api_client, user):
-        resp = api_client.post("/api/v1/auth/password-reset/", {"email": "test@example.com"}, format="json")
+        resp = api_client.post(
+            "/api/v1/auth/password-reset/", {"email": "test@example.com"}, format="json"
+        )
         assert resp.status_code == status.HTTP_200_OK
 
     def test_password_reset_confirm_success(self, api_client, user):
+        from django.contrib.auth.tokens import default_token_generator
         from django.utils.encoding import force_bytes
         from django.utils.http import urlsafe_base64_encode
-        from django.contrib.auth.tokens import default_token_generator
 
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
         resp = api_client.post(
             "/api/v1/auth/password-reset/confirm/",
-            {"uid": uid, "token": token, "new_password": "newpass123", "new_password_confirm": "newpass123"},
+            {
+                "uid": uid,
+                "token": token,
+                "new_password": "newpass123",
+                "new_password_confirm": "newpass123",
+            },
             format="json",
         )
         assert resp.status_code == status.HTTP_200_OK
@@ -111,7 +132,12 @@ class TestPasswordReset:
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         resp = api_client.post(
             "/api/v1/auth/password-reset/confirm/",
-            {"uid": uid, "token": "invalid", "new_password": "newpass123", "new_password_confirm": "newpass123"},
+            {
+                "uid": uid,
+                "token": "invalid",
+                "new_password": "newpass123",
+                "new_password_confirm": "newpass123",
+            },
             format="json",
         )
         assert resp.status_code == status.HTTP_400_BAD_REQUEST

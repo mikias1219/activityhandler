@@ -1,6 +1,7 @@
 """
 User and auth serializers.
 """
+
 from rest_framework import serializers
 
 from .models import User
@@ -18,7 +19,9 @@ class UserSerializer(serializers.ModelSerializer):
 class RegisterSerializer(serializers.ModelSerializer):
     """Registration with password."""
 
-    password = serializers.CharField(write_only=True, min_length=8, style={"input_type": "password"})
+    password = serializers.CharField(
+        write_only=True, min_length=8, style={"input_type": "password"}
+    )
     password_confirm = serializers.CharField(write_only=True, style={"input_type": "password"})
 
     class Meta:

@@ -4,51 +4,64 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Budget',
+            name="Budget",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('month', models.DateField(help_text='First day of month (YYYY-MM-01)')),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=12)),
-                ('currency', models.CharField(default='USD', max_length=3)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("month", models.DateField(help_text="First day of month (YYYY-MM-01)")),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=12)),
+                ("currency", models.CharField(default="USD", max_length=3)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
             options={
-                'ordering': ['-month'],
+                "ordering": ["-month"],
             },
         ),
         migrations.CreateModel(
-            name='Expense',
+            name="Expense",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=12)),
-                ('currency', models.CharField(default='USD', max_length=3)),
-                ('expense_date', models.DateField(db_index=True)),
-                ('note', models.TextField(blank=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=12)),
+                ("currency", models.CharField(default="USD", max_length=3)),
+                ("expense_date", models.DateField(db_index=True)),
+                ("note", models.TextField(blank=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
             options={
-                'ordering': ['-expense_date', '-created_at'],
+                "ordering": ["-expense_date", "-created_at"],
             },
         ),
         migrations.CreateModel(
-            name='ExpenseCategory',
+            name="ExpenseCategory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128)),
-                ('icon', models.CharField(blank=True, max_length=32)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("name", models.CharField(max_length=128)),
+                ("icon", models.CharField(blank=True, max_length=32)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
             options={
-                'verbose_name_plural': 'Expense categories',
-                'ordering': ['name'],
+                "verbose_name_plural": "Expense categories",
+                "ordering": ["name"],
             },
         ),
     ]

@@ -1,6 +1,7 @@
 """
 Automation: IFTTT-style rules and reminders.
 """
+
 from django.conf import settings
 from django.db import models
 

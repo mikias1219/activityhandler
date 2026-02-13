@@ -1,8 +1,9 @@
 """
 LifeOS URL configuration.
 """
+
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from core.urls import urlpatterns as core_urls
